@@ -1,27 +1,39 @@
 # Harness Cost Category Manager
 
-A **Python CLI tool** to manage [Harness CCM](https://harness.io/products/cloud-cost-management/) Cost Categories (Business Mappings).  
-This tool allows you to **list, backup, restore, and delete** cost categories with a simple interactive menu.
+A Python utility to **manage Harness CCM Cost Categories** via the Harness API.  
+It supports:
+
+- Listing all cost categories
+- Backing up a single cost category
+- **Backing up all cost categories individually** (easy to restore)
+- Restoring a cost category from a backup
+- **Restoring all cost categories from backups**
+- Deleting a cost category
 
 ---
 
-## Features
+## 🔧 Features
 
-- ✅ **List Cost Categories** – View all existing cost categories with names and UUIDs.  
-- ✅ **Backup Cost Category** – Save a selected cost category to a timestamped JSON file.  
-- ✅ **Restore Cost Category** – Restore a cost category from a JSON backup (optionally with a new name).  
-- ✅ **Delete Cost Category** – Delete an existing cost category by name.  
-- ✅ **Organized Backups** – Automatically stores backups in the `backups/` folder with timestamps.  
-- ✅ **Interactive CLI Menu** – Easy to navigate, with status logging for every action.
+1. **List Cost Categories**  
+2. **Backup a Single Cost Category**  
+3. **Backup All Cost Categories (Individual JSON files)**  
+4. **Restore a Single Cost Category**  
+5. **Restore All Cost Categories from Backups**  
+6. **Delete a Cost Category**  
+7. **Interactive Menu Interface**  
 
 ---
 
-## Prerequisites
+## 📦 Installation
 
-- Python 3.7+
-- `requests` library
+1. Clone this repository:
 
-Install dependencies:
+```bash
+git clone https://github.com/Samriddha11/cost-category-manager.git
+cd cost-category-manager
+```
+
+2. Install dependencies:
 
 ```bash
 pip install requests
@@ -29,27 +41,23 @@ pip install requests
 
 ---
 
-## Setup
+## ⚙️ Configuration
 
-1. Clone this repository:
-
-```bash
-git clone https://github.com/<your-username>/harness-cost-category-manager.git
-cd harness-cost-category-manager
-```
-
-2. Configure your **Harness Account ID** and **API Key** in the script:
+Update the **config** section at the top of `cost_category_manager.py`:
 
 ```python
-ACCOUNT_ID = "your-account-id"
-API_KEY = "your-personal-access-token"
+BASE_URL = "https://app.harness.io/ccm/api"
+ACCOUNT_ID = "your_account_id"
+API_KEY = "your_personal_access_token"
+BACKUP_FOLDER = "backups"
 ```
 
-> ⚠️ **Tip:** Use a [Harness Personal Access Token (PAT)](https://developer.harness.io/docs/platform/automation/api/authentication/) with **CCM Business Mapping permissions**.
+- `API_KEY` should be a Harness **Personal Access Token (PAT)**.
+- Backups will be stored in the `backups/` folder by default.
 
 ---
 
-## Usage
+## 🚀 Usage
 
 Run the script:
 
@@ -57,103 +65,106 @@ Run the script:
 python cost_category_manager.py
 ```
 
-### Interactive Menu
+You will see the interactive menu:
 
 ```
 ===== Harness Cost Category Manager =====
 1. List Cost Categories
 2. Backup a Cost Category
-3. Restore a Cost Category from Backup
-4. Delete a Cost Category
-5. Exit
+3. Backup ALL Cost Categories
+4. Restore a Cost Category from Backup
+5. Restore ALL Cost Categories
+6. Delete a Cost Category
+7. Exit
 ```
 
 ---
 
-## Methods and Functionality
+### 1️⃣ List Cost Categories
 
-### 1. `list_cost_categories()`
-
-Fetches and displays all cost categories for the given account:
-
-- Shows **Name** and **UUID**
-- Returns a list of cost category objects
-
----
-
-### 2. `backup_cost_category(name: str)`
-
-Creates a timestamped backup of a cost category:
-
-- Fetches the **full JSON** of the cost category
-- Stores backup in `backups/<Name>_backup_<timestamp>.json`
-
----
-
-### 3. `restore_cost_category(backup_file: str, new_name: str = None)`
-
-Restores a cost category from a JSON backup:
-
-- **Optionally rename** the cost category on restore
-- Cleans metadata (`uuid`, `createdAt`, `lastUpdatedAt`, etc.) automatically
-- Posts the new category to Harness
-
----
-
-### 4. `delete_cost_category(name: str)`
-
-Deletes an existing cost category by name:
-
-- Confirms name and finds UUID
-- Issues `DELETE` request to Harness CCM API
-
----
-
-## Folder Structure
-
-```
-harness-cost-category-manager/
-├── cost_category_manager.py  # Main CLI script
-├── backups/                  # JSON backups stored here
-└── README.md                 # Project documentation
+```bash
+Select an option: 1
+[INFO] Existing Cost Categories:
+  1. Marketing (UUID: xxxx-xxxx)
+  2. Engineering (UUID: yyyy-yyyy)
 ```
 
 ---
 
-## Example Workflow
+### 2️⃣ Backup a Single Cost Category
 
-1. **List Cost Categories**  
-   See all current categories and UUIDs.
+Creates a timestamped JSON backup for the selected cost category:
 
-2. **Backup Category**  
-   ```text
-   Enter the cost category name to backup: Services
-   [SUCCESS] Backup saved to: backups/Services_backup_20250729_153045.json
-   ```
-
-3. **Restore from Backup**  
-   ```text
-   Enter backup file path: backups/Services_backup_20250729_153045.json
-   Enter new name (leave blank to use original): Services Copy
-   [SUCCESS] Cost category 'Services Copy' restored successfully!
-   ```
-
-4. **Delete Category**  
-   ```text
-   Enter the cost category name to delete: Services Copy
-   [SUCCESS] Deleted cost category 'Services Copy'.
-   ```
+```bash
+Select an option: 2
+Enter the cost category name to backup: Marketing
+[SUCCESS] Backup saved to: backups/Marketing_backup_20250729_120000.json
+```
 
 ---
 
-## Planned Enhancements
+### 3️⃣ Backup ALL Cost Categories
 
-- [ ] **Backup All Categories** at once  
-- [ ] **Automatic Scheduled Backup** with cron  
-- [ ] **Logging to File** for audit purposes
+Creates **individual JSON files** for each cost category:
+
+```
+Select an option: 3
+[SUCCESS] Backup created: backups/Marketing_backup_20250729_120000.json
+[SUCCESS] Backup created: backups/Engineering_backup_20250729_120000.json
+```
+
+Result:
+
+```
+backups/
+ ├─ Marketing_backup_20250729_120000.json
+ ├─ Engineering_backup_20250729_120000.json
+```
 
 ---
 
-## License
+### 4️⃣ Restore a Single Cost Category
 
-MIT License © 2025 [Samriddha Choudhuri]
+```bash
+Select an option: 4
+Enter backup file path: backups/Marketing_backup_20250729_120000.json
+Enter new name (leave blank to use original): MarketingCopy
+[SUCCESS] Cost category 'MarketingCopy' restored successfully!
+```
+
+---
+
+### 5️⃣ Restore ALL Cost Categories
+
+Restores **all JSON files** in the backups folder.  
+By default, names are **auto-renamed** to avoid conflicts:
+
+```
+Select an option: 5
+[INFO] Restoring cost category: Marketing
+[SUCCESS] Cost category 'Marketing_restored_120301' restored successfully!
+```
+
+---
+
+### 6️⃣ Delete a Cost Category
+
+```bash
+Select an option: 6
+Enter the cost category name to delete: MarketingCopy
+[SUCCESS] Deleted cost category 'MarketingCopy'.
+```
+
+---
+
+## 📁 Backup & Restore Tips
+
+- Each JSON file stores **full cost category details**.  
+- **UUIDs and timestamps** are automatically removed during restore.  
+- `restore_all_cost_categories()` auto-renames categories if `auto_rename=True` to prevent name collisions.
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License**.
