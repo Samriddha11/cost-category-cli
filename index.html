@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harness Cost Category Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f8;
+      color: #333;
+    }
+    header {
+      background: #0b72b9;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #0b72b9;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+    .benefits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .benefit-box {
+      background: #e8f0fe;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #d0e0ff;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #0b72b9;
+      color: white;
+      margin-top: 40px;
+    }
+    a {
+      color: #0b72b9;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Harness Cost Category Manager</h1>
+  <p>Backup, Restore, and Manage Cost Categories with Ease</p>
+</header>
+
+<main>
+  <section class="section">
+    <h2>Problem Statement</h2>
+    <p>
+      Managing and maintaining Harness Cost Categories in an enterprise environment presents several challenges:
+    </p>
+    <ul>
+      <li>Complex cost category configurations make onboarding new teams challenging.</li>
+      <li>Any accidental addition or misconfiguration can lead to immediate cost impact, requiring fast rollback.</li>
+      <li>Lack of native version control makes rollback and auditing difficult.</li>
+      <li>Cost categories are dynamic and change as the organization scales, increasing maintenance complexity.</li>
+      <li>Before major structural changes, capturing a snapshot is critical to minimize unexpected cost impact.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Solution</h2>
+    <p>
+      The <strong>Harness Cost Category Manager</strong> provides an automated way to manage the lifecycle of cost categories with:
+    </p>
+    <ul>
+      <li>Full backup of all cost categories, with each category saved as an individual JSON file.</li>
+      <li>Quick restoration of single or multiple cost categories, supporting <code>auto_rename</code> to prevent conflicts.</li>
+      <li>Version-like snapshots for safe rollback before any structural or functional changes.</li>
+      <li>Simple CLI interface for listing, backing up, restoring, and deleting cost categories.</li>
+    </ul>
+    <pre>
+python cost_category_manager.py
+
+# Menu options:
+# 1. List Cost Categories
+# 2. Backup a Cost Category
+# 3. Backup ALL Cost Categories
+# 4. Restore a Cost Category from Backup
+# 5. Restore ALL Cost Categories (with auto_rename option)
+# 6. Delete a Cost Category
+# 7. Exit
+    </pre>
+  </section>
+
+  <section class="section benefits">
+    <div class="benefit-box">
+      <h2>Benefit to Customer</h2>
+      <ul>
+        <li>Ensures quick rollback in case of accidental cost category changes.</li>
+        <li>Provides version-like backups to maintain control over evolving configurations.</li>
+        <li>Enables auditing and historical tracking of cost category states.</li>
+        <li>Reduces risk of unexpected cloud cost impact during changes.</li>
+        <li>Simplifies team onboarding and cost management across growing organizations.</li>
+      </ul>
+    </div>
+
+    <div class="benefit-box">
+      <h2>Benefit to Harness</h2>
+      <ul>
+        <li>Enhances customer confidence in Harness CCM by providing a safety net for changes.</li>
+        <li>Reduces support cases related to accidental cost category misconfigurations.</li>
+        <li>Improves enterprise adoption with a practical backup and restore workflow.</li>
+        <li>Positions Harness as a reliable FinOps platform with robust lifecycle management.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Learn More</h2>
+    <p>
+      For setup instructions, visit the repository 
+      <a href="https://github.com/Samriddha11/cost-category-manager" target="_blank">
+        GitHub Project
+      </a>.
+    </p>
+    <p>
+      For generating a Harness Personal Access Token (PAT), see the 
+      <a href="https://developer.harness.io/docs/platform/automation/api/personal-access-tokens" target="_blank">
+        official documentation
+      </a>.
+    </p>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 Harness Cost Category Manager | Designed for Enterprise FinOps Teams
+</footer>
+
+</body>
+</html>
