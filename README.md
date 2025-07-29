@@ -1,58 +1,70 @@
 # Harness Cost Category Manager
 
-A Python-based CLI utility to **backup, restore, list, and delete** Harness **Cost Categories** using the Harness CCM API.
+This Python utility allows you to **manage Harness CCM (Cloud Cost Management) cost categories** from the command line.
+It supports **backup, restore, batch backup/restore, and deletion** of cost categories using the Harness API.
 
 ---
 
-## 🚀 Features
-
-1. **List Cost Categories** – Displays all existing cost categories.
-2. **Backup a Single Cost Category** – Creates a timestamped JSON backup.
-3. **Backup ALL Cost Categories (Individual Files)** – Each category gets its own JSON file.
-4. **Restore a Cost Category** – Restores from a backup file, optionally renaming it.
-5. **Restore ALL Cost Categories** – Batch restores all JSON backups with optional `auto_rename` to prevent conflicts.
-6. **Delete a Cost Category** – Deletes a category by name.
-
-Backups are stored in the `backups/` folder for easy management.
+## **Features**
+- ✅ List all cost categories
+- ✅ Backup individual cost categories to JSON
+- ✅ Backup **all** cost categories into individual JSON files
+- ✅ Restore a cost category from a backup file
+- ✅ Restore **all** cost categories from a backup folder
+  - Supports **`auto_rename`** to avoid name conflicts during restore
+- ✅ Delete cost categories
+- ✅ Interactive CLI menu interface
 
 ---
 
-## ⚙️ Setup
+## **Requirements**
 
-1. **Clone the Repository:**
+- Python 3.x
+- `requests` library
+
+Install dependencies:
+
+```bash
+pip install requests
+```
+
+---
+
+## **Setup**
+
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/Samriddha11/cost-category-manager.git
 cd cost-category-manager
 ```
 
-2. **Install Dependencies:**
-
-```bash
-pip install -r requirements.txt
-```
-
-3. **Set Your Harness Credentials:**
-
-- Update the `ACCOUNT_ID` and `API_KEY` in the script.  
-- **Generate a Harness PAT Token:** [How to generate a PAT token](https://developer.harness.io/docs/platform/Automation/api/add-and-manage-api-keys)
+2. Configure your **Harness Account** in the script:
 
 ```python
-ACCOUNT_ID = "your_harness_account_id"
-API_KEY = "your_pat_api_key"
+ACCOUNT_ID = "YOUR_ACCOUNT_ID"
+API_KEY = "YOUR_PAT_TOKEN"
 ```
 
-4. **Run the Script:**
+3. Generate a **Harness Personal Access Token (PAT)** by following the guide:  
+[Harness Documentation: Generate PAT Token](https://developer.harness.io/docs/platform/user-management/personal-access-tokens/)
+
+4. Create a folder named `backups` (the script also auto-creates it if missing).
+
+---
+
+## **CLI Menu**
+
+When you run the script:
 
 ```bash
 python cost_category_manager.py
 ```
 
----
-
-## 📋 Menu Options
+You will see:
 
 ```
+===== Harness Cost Category Manager =====
 1. List Cost Categories
 2. Backup a Cost Category
 3. Backup ALL Cost Categories
@@ -64,69 +76,69 @@ python cost_category_manager.py
 
 ---
 
-## 💾 Backup Examples
+## **Examples**
 
-### Backup a Single Cost Category
+### 1️⃣ Backup a single cost category
 
-```bash
-Enter the cost category name to backup: Cloud_Projects
-# Output:
-# [INFO] Starting backup for cost category: Cloud_Projects
-# [SUCCESS] Backup saved to: backups/Cloud_Projects_backup_20250729_153045.json
 ```
-
-### Backup ALL Cost Categories
-
-```bash
-Select option 3 in the menu.
-# Output:
-# [INFO] Backing up all cost categories...
-# [SUCCESS] Backup created: backups/Finance_backup_20250729_153045.json
-# [SUCCESS] Backup created: backups/Engineering_backup_20250729_153045.json
+Enter the cost category name to backup: Production
+[SUCCESS] Backup saved to: backups/Production_backup_20250729_120512.json
 ```
 
 ---
 
-## ♻️ Restore Examples
+### 2️⃣ Backup **all** cost categories
 
-### Restore a Single Cost Category
-
-```bash
-Enter backup file path: backups/Cloud_Projects_backup_20250729_153045.json
-Enter new name (leave blank to use original): Cloud_Projects_Restored
-# Output:
-# [INFO] Creating cost category 'Cloud_Projects_Restored'...
-# [SUCCESS] Cost category 'Cloud_Projects_Restored' restored successfully!
 ```
-
-### Restore ALL with Auto Rename (Default)
-
-```bash
-Select option 5 in the menu.
-# Output:
-# [INFO] Restoring all cost categories from folder: backups
-# [INFO] Restoring cost category: Cloud_Projects
-# [INFO] Creating cost category 'Cloud_Projects_restored_154512'...
-# [SUCCESS] Cost category 'Cloud_Projects_restored_154512' restored successfully!
-```
-
-`auto_rename=True` ensures restored categories **won’t conflict** with existing names.
-
----
-
-## 🗑 Delete Example
-
-```bash
-Enter the cost category name to delete: Old_Project
-# Output:
-# [INFO] Attempting to delete cost category: Old_Project
-# [SUCCESS] Deleted cost category 'Old_Project'.
+[INFO] Backing up all cost categories...
+[SUCCESS] Backup created: backups/Production_backup_20250729_120512.json
+[SUCCESS] Backup created: backups/Development_backup_20250729_120512.json
 ```
 
 ---
 
-## 📝 Notes
+### 3️⃣ Restore **all** cost categories with `auto_rename`
 
-- Backups are timestamped for uniqueness.
-- Restoring with `auto_rename=True` prevents name conflicts.
-- Ensure your PAT token has **CCM Read/Write permissions**.
+```
+Select option: 5
+Enable auto-rename to avoid conflicts? (y/n): y
+[INFO] Restoring cost category: Production
+[SUCCESS] Cost category 'Production_restored_145233' restored successfully!
+```
+
+If a category with the same name exists, auto-rename will add `_restored_<timestamp>` to the name.
+
+---
+
+### 4️⃣ Restore **all** cost categories without `auto_rename`
+
+```
+Select option: 5
+Enable auto-rename to avoid conflicts? (y/n): n
+[INFO] Restoring cost category: Production
+[ERROR] Restore failed: {"status":"CONFLICT","message":"Cost category with name 'Production' already exists."}
+```
+
+---
+
+### 5️⃣ Delete a cost category
+
+```
+Enter the cost category name to delete: Production
+[SUCCESS] Deleted cost category 'Production'.
+```
+
+---
+
+## **Batch Backup & Restore Notes**
+
+- Backups are stored as **individual JSON files** per cost category for easy restore.
+- `restore_all_cost_categories(auto_rename=True)` prevents conflicts by renaming duplicates.
+- When `auto_rename=False`, restore will fail if a category with the same name exists.
+
+---
+
+## **Author**
+**Samriddha Choudhuri**
+
+GitHub: [Samriddha11](https://github.com/Samriddha11/cost-category-manager)
