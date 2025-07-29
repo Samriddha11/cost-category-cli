@@ -1,81 +1,57 @@
 # Harness Cost Category Manager
 
-A Python-based CLI tool to **list, backup, restore, and delete** [Harness](https://harness.io) CCM (Cloud Cost Management) **Cost Categories**.
+Harness Cost Category Manager is a Python-based CLI tool to manage **Cost Categories (Business Mappings)** in Harness Cloud Cost Management (CCM).  
+It allows you to **list, backup, restore, and delete** cost categories easily, with both individual and bulk operations.
 
-This tool is useful for **backing up all cost categories individually** into JSON files for easy restore, migrating cost categories across environments, or creating automated disaster recovery workflows.
+## Features
 
----
+- ✅ List all existing cost categories
+- ✅ Backup a single cost category to a JSON file
+- ✅ Backup all cost categories (each as a separate JSON file for easy restore)
+- ✅ Restore a single cost category from a backup file
+- ✅ Restore all cost categories from a backup folder (with optional auto-renaming to avoid conflicts)
+- ✅ Delete a cost category by name
 
-## **Features**
-
-1. **List Cost Categories**  
-   View all existing cost categories in your Harness account.
-
-2. **Backup a Single Cost Category**  
-   Saves a specific cost category to a JSON file with timestamp.
-
-3. **Backup ALL Cost Categories (Individual Files)**  
-   Creates separate backup JSON files for each cost category.  
-   ✅ Easy restore – Each backup file contains full cost category metadata.
-
-4. **Restore a Single Cost Category**  
-   Recreates a cost category from a backup JSON file.  
-   - Optionally, you can assign a new name while restoring.
-
-5. **Restore ALL Cost Categories**  
-   Restores all cost categories from the `backups/` folder.  
-   - Auto-renames categories to prevent name conflicts.
-
-6. **Delete a Cost Category**  
-   Permanently deletes a cost category from Harness.
-
----
-
-## **Installation**
-
-1. Clone the repository:
+## Installation
 
 ```bash
+# Clone this repository
 git clone https://github.com/Samriddha11/cost-category-manager.git
 cd cost-category-manager
-```
 
-2. Install dependencies (Python 3.8+ required):
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
----
+Requirements:
+- Python 3.8+
+- `requests` library
 
-## **Configuration**
+## Configuration
 
-Edit the following variables in the Python script:
+Update the top section of `cost_category_manager.py` with your Harness account details:
 
 ```python
 BASE_URL = "https://app.harness.io/ccm/api"
-ACCOUNT_ID = "<YOUR_ACCOUNT_ID>"
-API_KEY = "<YOUR_PAT_API_KEY>"
+ACCOUNT_ID = "YOUR_ACCOUNT_ID"
+API_KEY = "YOUR_HARNESS_PAT_TOKEN"
 BACKUP_FOLDER = "backups"
 ```
 
-- `ACCOUNT_ID` → Your Harness account identifier.
-- `API_KEY` → Your Harness **Personal Access Token (PAT)**.
+### Generating a Harness PAT Token
 
-🔹 **How to generate a PAT token:**  
-[Harness Documentation – Generating a PAT](https://developer.harness.io/docs/platform/automation/api/add-and-manage-api-keys/#generate-a-personal-access-token)
+Follow the official Harness guide to generate a PAT token:  
+🔗 [Harness: Generate a Personal Access Token](https://developer.harness.io/docs/platform/user-management/personal-access-tokens)
 
----
+## Usage
 
-## **Usage**
-
-Run the CLI tool:
+Run the script to open the interactive CLI menu:
 
 ```bash
 python cost_category_manager.py
 ```
 
-Menu options:
+You will see:
 
 ```
 ===== Harness Cost Category Manager =====
@@ -88,61 +64,67 @@ Menu options:
 7. Exit
 ```
 
+### Examples
+
+#### 1. List all cost categories
+
+```
+Select an option: 1
+
+[INFO] Existing Cost Categories:
+  1. AWS_Prod (UUID: abc123)
+  2. Azure_Dev (UUID: xyz456)
+```
+
+#### 2. Backup a single cost category
+
+```
+Select an option: 2
+Enter the cost category name to backup: AWS_Prod
+[INFO] Starting backup for cost category: AWS_Prod
+[SUCCESS] Backup saved to: backups/AWS_Prod_backup_20250729_153045.json
+```
+
+#### 3. Backup all cost categories
+
+```
+Select an option: 3
+[INFO] Backing up all cost categories...
+[SUCCESS] Backup created: backups/AWS_Prod_backup_20250729_153045.json
+[SUCCESS] Backup created: backups/Azure_Dev_backup_20250729_153045.json
+```
+
+#### 4. Restore a single cost category
+
+```
+Select an option: 4
+Enter backup file path: backups/AWS_Prod_backup_20250729_153045.json
+Enter new name (leave blank to use original): AWS_Prod_Restored
+[SUCCESS] Cost category 'AWS_Prod_Restored' restored successfully!
+```
+
+#### 5. Restore all cost categories
+
+```
+Select an option: 5
+[INFO] Restoring all cost categories from folder: backups
+[INFO] Restoring cost category: AWS_Prod
+[SUCCESS] Cost category 'AWS_Prod_restored_153045' restored successfully!
+[INFO] Restoring cost category: Azure_Dev
+[SUCCESS] Cost category 'Azure_Dev_restored_153046' restored successfully!
+```
+
+#### 6. Delete a cost category
+
+```
+Select an option: 6
+Enter the cost category name to delete: AWS_Prod_Restored
+[SUCCESS] Deleted cost category 'AWS_Prod_Restored'.
+```
+
 ---
 
-## **Backup Files**
-
-- All backups are stored in the `backups/` folder.
-- Each backup JSON file is named like:
-
-```
-<CostCategoryName>_backup_YYYYMMDD_HHMMSS.json
-```
-
-Example:
-
-```
-Engineering_backup_20250729_121530.json
-```
-
----
-
-## **Example Commands**
-
-### **Backup a Specific Cost Category**
-```bash
-python cost_category_manager.py
-# Choose Option 2
-# Enter cost category name: Engineering
-```
-
-### **Backup All Cost Categories**
-```bash
-python cost_category_manager.py
-# Choose Option 3
-```
-
-### **Restore All Cost Categories**
-```bash
-python cost_category_manager.py
-# Choose Option 5
-```
-
----
-
-## **Notes**
-
-- When restoring **all** cost categories, auto-renaming with a timestamp is applied to avoid conflicts.
-- Only cost category configuration is backed up; cost data is not included.
-
----
-
-## **License**
-
-MIT License
-
----
-
-### **Author**
-**Samriddha Choudhuri**  
-GitHub: [Samriddha11](https://github.com/Samriddha11)
+### Notes
+- Backups are stored in the `backups/` folder with timestamps.
+- Restoring with `auto_rename=True` prevents name conflicts.
+- Make sure your PAT token has **CCM read/write** permissions.
